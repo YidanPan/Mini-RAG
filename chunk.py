@@ -18,17 +18,3 @@ def split_text(text, chunk_size=100):
             if current_chunk:
                 chunks.append(current_chunk)
     return chunks
-
-text = """
-Python is a programming language.
-Python is widely used in artificial intelligence.
-
-Python is also used in data science.
-Python has a simple and readable syntax.
-"""
-
-chunks = split_text(text, chunk_size=100)
-
-for i, chunk in enumerate(chunks):
-    print(f"\n Chunk {i}:")
-    print(chunk)

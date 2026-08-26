@@ -1,11 +1,31 @@
 import numpy as np
 from sentence_transformers import SentenceTransformer
+from chunk import split_text
+
+text = """
+Python is a programming language.
+Python is widely used in artificial intelligence.
+
+Python is also used in data science.
+Python has a simple and readable syntax.
+"""
+
+chunks=split_text(text,chunk_size=100)
+
+print("Chunks:")
+for i, chunk in enumerate(chunks):
+    print(f"\nChunk {i}:")
+    print(chunk)
 
 model=SentenceTransformer("all-MiniLM-L6-v2") #加载一个训练好的模型
-sentences=["Python is a programming language.","Python is used for software development.","I like eating apples."]
-embedding=model.encode(sentences)#把文本转换为向量
+
+embedding=model.encode(chunks)#把文本转换为向量
+
 print("embedding shape：",embedding.shape)
 
+
+
+"""
 #提取出三个向量
 python_vector=embedding[0]
 software_vector=embedding[1]
@@ -18,3 +38,4 @@ similarity_python_apple=np.dot(python_vector,apple_vector)/(np.linalg.norm(pytho
 
 print("Python ↔ Software:", similarity_python_software)
 print("Python ↔ Apple:",similarity_python_apple)
+"""
