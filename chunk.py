@@ -1,9 +1,12 @@
 #定义一个文本切分的函数
-def split_text(text,chunk_size=100):
+def split_text(text,chunk_size=100,chunk_overlap=20):
     chunks=[]
-    for i in range(0,len(text),chunk_size):
-        chunk=text[i:i+chunk_size] #每一个chunk的文本切片
+    start=0
+    while start<len(text):
+        end=start+chunk_size
+        chunk=text[start:end]
         chunks.append(chunk)
+        start=end-chunk_overlap
     return chunks
 
 text = """
