@@ -1,24 +1,17 @@
 import faiss
 import numpy as np
+import ollama
+
 from sentence_transformers import SentenceTransformer
-from chunk import split_text
 from retrieval import retrieve
 
-text = """
-Python is a programming language.
-Python is widely used in artificial intelligence.
-Python is also used in data science.
-Python has a simple and readable syntax.
-"""
+#main主要执行查询功能
 
-chunks=split_text(text,chunk_size=100)
+chunks = np.load("index/chunks.npy",allow_pickle=True).tolist() #直接导入存储在os中的
+
 model=SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = model.encode(chunks)
-embeddings = np.array(embeddings).astype("float32")
 
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(embeddings)
+index = faiss.read_index("index/faiss.index")
 
 query="What is Python used for?"
 results=retrieve(query,chunks,model,index,k=2)
@@ -37,5 +30,16 @@ Question:
 Answer:
 """
 
-print("Context:")
-print(context)
+response = ollama.chat(
+    model="qwen2.5:3b",
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+)
+answer = response["message"]["content"]
+
+print("\nAnswer:")
+print(answer)

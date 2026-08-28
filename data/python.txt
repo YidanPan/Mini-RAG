@@ -1,0 +1,6 @@
+text = """
+Python is a programming language.
+Python is widely used in artificial intelligence.
+Python is also used in data science.
+Python has a simple and readable syntax.
+"""
