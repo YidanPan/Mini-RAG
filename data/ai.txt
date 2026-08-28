@@ -1,0 +1,5 @@
+Artificial intelligence is a field of computer science.
+
+Machine learning is a subset of artificial intelligence.
+
+Deep learning uses neural networks to learn from data.
