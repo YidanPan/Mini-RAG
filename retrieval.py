@@ -3,11 +3,13 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from chunk import split_text
 
-def retrieve(query,chunks,model,index,k=2):
+# 实现检索功能，传入问题和切片保存后的document
+def retrieve(query,documents,model,index,k=2):
     query_embedding=model.encode([query])
     query_embedding=np.array(query_embedding).astype("float32")
-    distances,indeces=index.search(query_embedding,k)
+    distances,indices=index.search(query_embedding,k)
+
     results=[]
-    for i in indeces[0]:
-        results.append(chunks[i])
+    for i in indices[0]:
+        results.append(documents[i]) #document中索引和文本切片内容是对应的
     return results

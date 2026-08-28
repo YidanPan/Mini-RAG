@@ -1,0 +1,52 @@
+[
+  {
+    "text": "Artificial intelligence is a field of computer science.",
+    "source": "ai.txt",
+    "chunk_id": 0
+  },
+  {
+    "text": "Machine learning is a subset of artificial intelligence.",
+    "source": "ai.txt",
+    "chunk_id": 1
+  },
+  {
+    "text": "Deep learning uses neural networks to learn from data.",
+    "source": "ai.txt",
+    "chunk_id": 2
+  },
+  {
+    "text": "",
+    "source": "python.txt",
+    "chunk_id": 0
+  },
+  {
+    "text": "text = \"\"\"\nPython is a programming language.\nPython is widely used in artificial intelligence.\nPython is also used in data science.\nPython has a simple and readable syntax.\n\"\"\". ",
+    "source": "python.txt",
+    "chunk_id": 1
+  },
+  {
+    "text": "RAG 是 Retrieval-Augmented Generation 的缩写。",
+    "source": "rag.txt",
+    "chunk_id": 0
+  },
+  {
+    "text": "RAG 系统通常包含两个主要阶段：\n检索和生成。",
+    "source": "rag.txt",
+    "chunk_id": 1
+  },
+  {
+    "text": "在检索阶段，系统首先将用户的问题转换成向量，\n然后在向量数据库中寻找与问题最相似的文本。",
+    "source": "rag.txt",
+    "chunk_id": 2
+  },
+  {
+    "text": "在生成阶段，系统将检索得到的文本作为上下文，\n交给大语言模型生成最终答案。",
+    "source": "rag.txt",
+    "chunk_id": 3
+  },
+  {
+    "text": "RAG 可以让语言模型利用外部知识，\n从而减少模型不知道最新信息的问题。",
+    "source": "rag.txt",
+    "chunk_id": 4
+  }
+]
