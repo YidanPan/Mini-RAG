@@ -21,6 +21,9 @@ index = faiss.read_index("index/faiss.index")
 
 query="What is Python used for?"
 results=retrieve(query,documents,model,index,k=2)
+if not results:
+    print("No relevant information found.")
+    exit()
 
 context = "\n\n".join(
     result["text"]#results字典中读取每个text内容
