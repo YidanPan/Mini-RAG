@@ -13,7 +13,10 @@ def main():
 
     vectorstore = load_vectorstore(embeddings)
 
-    retriever = get_retriever(vectorstore)
+    source = input("Source filter (press Enter for all documents): ").strip()#根据用户输入来决定检索来源
+    if source == "":
+        source = None
+    retriever = get_retriever(vectorstore,source=source)
 
     prompt = get_prompt()
 
