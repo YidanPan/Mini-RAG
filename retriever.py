@@ -5,11 +5,11 @@ def get_retriever(vectorstore, source=None):
     search_kwargs = {
         "k": RETRIEVAL_K,
         "fetch_k": RETRIEVAL_FETCH_K
-    }
+    }#创建字典
     if source:#如果有指定来源检索
         search_kwargs["filter"] = {
             "source": source
-        }
+        }#在字典中添加key
     return vectorstore.as_retriever(
         search_type="mmr",#全库搜索按照mmr方式检索
         search_kwargs=search_kwargs

@@ -50,3 +50,32 @@ def create_rag_chain(retriever, prompt, llm):
         )
     )
     return chain
+
+def conversational_rag(query,chat_history,retriever,rewrite_prompt,answer_prompt,llm):
+    rewrite_chain = (
+        rewrite_prompt
+        | llm
+    )#把重新写的完整问题交给llm
+    rewritten = rewrite_chain.invoke({
+        "chat_history": chat_history,
+        "question": query
+    })
+    standalone_question = rewritten.content
+    docs = retriever.invoke(
+        standalone_question
+    )
+    context = format_docs(docs)
+    answer_chain = (
+        answer_prompt
+        | llm
+    )
+    answer_stream = answer_chain.stream({
+        "context": context,
+        "chat_history": chat_history,
+        "question": query
+    })
+    return {
+        "stream": answer_stream,
+        "sources": get_sources(docs),
+        "standalone_question": standalone_question
+    }
