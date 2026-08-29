@@ -1,55 +1,33 @@
-import faiss
-import numpy as np
-import os
-import json
+from loader import load_documents
+from splitter import split_documents
+from embedding import get_embeddings
+from vectorstore import create_vectorstore
+from vectorstore import save_vectorstore
 
-from sentence_transformers import SentenceTransformer
-from loader import load_document
-from chunk import split_text
+#创建库程序
+def build_index():
+    print("Loading documents...")
+    documents = load_documents()
 
-#该文件主要实现：读取文档，进行切片转换为向量保存，建立索引并保存
+    print(f"Loaded {len(documents)} documents.")
+    print("Splitting documents...")
 
-all_chunks=[]#保存所有txt文档的切片（原文本）
-documents=[]#保存原文本切片对应的索引和文本来源（Metadata）
+    chunks = split_documents(documents)#切分document中的文本为chunk
+    print(f"Created {len(chunks)} chunks.")
 
-files=os.listdir("data") #是data路径下所有文件名的list
-for file in files:
-    if file.endswith(".txt"):
-        path=os.path.join("data",file) #Python 会自动处理不同操作系统的路径，当然也可以直接用字符串拼接构造path
+    print("Creating embeddings...")
+    embeddings = get_embeddings()#得到向量工具
 
-        text=load_document(path)
-
-        chunks = split_text(text, chunk_size=100)
-
-        all_chunks.extend(chunks)
-        for chunk_id,chunk in enumerate(chunks):
-            documents.append({
-                "text":chunk,
-                "source":file,
-                "chunk_id":chunk_id
-            })
-
-model = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = model.encode(all_chunks)
-embeddings = np.array(embeddings).astype("float32")
-
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(embeddings) #建立索引
-
-#保存到硬盘
-os.makedirs("index",exist_ok=True) #在操作系统中建立一个文件目录来存储faiss索引
-faiss.write_index(index,"index/faiss.index")
-
-#json格式比较适合保存document中内容格式
-with open(
-    "index/documents.json",
-    "w",
-    encoding="utf-8"
-) as f:
-    json.dump(
-        documents,
-        f,
-        ensure_ascii=False,
-        indent=2
+    print("Building FAISS vector store...")
+    vectorstore = create_vectorstore(
+        chunks,
+        embeddings
     )
+
+    print("Saving vector store...")
+    save_vectorstore(vectorstore)
+    
+    print("Vector store built successfully.")
+
+if __name__ == "__main__":
+    build_index()

@@ -1,5 +1,16 @@
-#模块化实现输入路径能读取路径下的文档内容
-def load_document(path):
-    with open(path,"r",encoding="utf-8") as f:
-        text=f.read()
-    return text
+from langchain_community.document_loaders import DirectoryLoader
+from langchain_community.document_loaders import TextLoader
+from config import DATA_PATH
+
+#加载所有txt文档
+def load_documents():
+    loader = DirectoryLoader(
+        DATA_PATH,
+        glob="*.txt",
+        loader_cls=TextLoader,
+        loader_kwargs={
+            "encoding": "utf-8"
+        }
+    )
+    documents = loader.load()
+    return documents

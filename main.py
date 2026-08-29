@@ -1,57 +1,43 @@
-import faiss
-import numpy as np
-import ollama
-import json
+from embedding import get_embeddings
+from vectorstore import load_vectorstore
+from retriever import get_retriever
+from prompt import get_prompt
+from llm import get_llm
+from rag import create_rag_chain
 
-from sentence_transformers import SentenceTransformer
-from retrieval import retrieve
+#主程序运行，实现完整RAG功能
+def main():
+    print("Loading vector store...")
 
-#main主要执行查询功能
+    embeddings = get_embeddings()
 
-with open(
-    "index/documents.json",
-    "r",
-    encoding="utf-8"
-) as f:
-    documents = json.load(f)#现在存储的是json格式的documents，进行对应读取内容
+    vectorstore = load_vectorstore(embeddings)
 
-model=SentenceTransformer("all-MiniLM-L6-v2")
+    retriever = get_retriever(vectorstore)
 
-index = faiss.read_index("index/faiss.index")
+    prompt = get_prompt()
 
-query="What is Python used for?"
-results=retrieve(query,documents,model,index,k=2)
-if not results:
-    print("No relevant information found.")
-    exit()
+    llm = get_llm()
 
-context = "\n\n".join(
-    result["text"]#results字典中读取每个text内容
-    for result in results
-)
+    rag_chain = create_rag_chain(
+        retriever,
+        prompt,
+        llm
+    )
 
-prompt = f"""
-Use the following context to answer the question.
+    while True:
+        query = input("\nQuestion: ")
+        if query.lower() == "exit":
+            break
 
-Context:
-{context}
+        results=rag_chain.invoke(query)
 
-Question:
-{query}
+        print("\nAnswer:")
+        print(results["answer"].content)
 
-Answer:
-"""
+        print("\nSources:")
+        for source in results["sources"]:
+            print("-",source)
 
-response = ollama.chat(
-    model="qwen2.5:3b",
-    messages=[
-        {
-            "role": "user",
-            "content": prompt
-        }
-    ]
-)
-answer = response["message"]["content"]
-
-print("\nAnswer:")
-print(answer)
+if __name__ == "__main__":
+    main()
