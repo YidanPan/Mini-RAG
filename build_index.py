@@ -3,11 +3,12 @@ from splitter import split_documents
 from embedding import get_embeddings
 from vectorstore import create_vectorstore
 from vectorstore import save_vectorstore
+from config import DATA_PATH
 
 #创建库程序
 def build_index():
     print("Loading documents...")
-    documents = load_documents()
+    documents = load_documents(DATA_PATH)
 
     print(f"Loaded {len(documents)} documents.")
     print("Splitting documents...")
@@ -26,7 +27,7 @@ def build_index():
 
     print("Saving vector store...")
     save_vectorstore(vectorstore)
-    
+
     print("Vector store built successfully.")
 
 if __name__ == "__main__":

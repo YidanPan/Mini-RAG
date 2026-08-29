@@ -5,7 +5,7 @@ def get_retriever(vectorstore):
     return vectorstore.as_retriever(
         search_type="mmr",
         search_kwargs={
-            "k": 3,
+            "k": RETRIEVAL_K,
             "fetch_k": 10 #从候选10个中选出3个
         }
     )
