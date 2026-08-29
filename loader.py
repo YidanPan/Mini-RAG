@@ -43,4 +43,6 @@ def load_documents(path):
     documents.extend(md_loader.load())
     documents.extend(pdf_loader.load())
 
+    documents = normalize_metadata(documents)#统一source格式
+
     return documents
