@@ -36,6 +36,21 @@ IMPORTANT TOOL RULES:
 
 9. Only produce the final answer after all required
    tool calls are complete.
+
+Do not terminate immediately if a tool fails.
+
+If the specified file does not exist:
+Call `list_documents`
+Identify the closest matching file
+Retry `search_document`
+
+If no information is found in the specified document:
+Try `search_knowledge_base`
+
+Do not retry indefinitely.
+
+If attempts continue to fail:
+Clearly inform the user of the reason for the failure.
 """
 
 def create_rag_agent(llm,vectorstore,checkpointer=None):
