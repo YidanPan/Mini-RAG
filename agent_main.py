@@ -1,47 +1,55 @@
-from langgraph.checkpoint.memory import (InMemorySaver)#langchain中自带的memory功能
-from embedding import get_embeddings
-from vectorstore import load_vectorstore
-from llm import get_llm
+"""Terminal entry point for Agentic RAG."""
+
+from uuid import uuid4
+
+from langgraph.checkpoint.memory import InMemorySaver
+
 from agent import create_rag_agent
 from agent_stream import stream_agent
+from cli_commands import handle_command, is_exit_command, print_help
+from embedding import get_embeddings
+from llm import get_llm
+from startup_check import run_startup_check
+from vectorstore import load_vectorstore
+
 
 def main():
-    print("Loading Agentic RAG...")
+    if not run_startup_check():
+        return
 
-    embeddings = get_embeddings()
-
-    vectorstore = load_vectorstore(
-        embeddings
-    )
-
-    llm = get_llm()
-
-    checkpointer = InMemorySaver() #创建了一个内存状态保存器
-
+    print("\nLoading Agentic RAG...")
+    vectorstore = load_vectorstore(get_embeddings())
+    runtime_options = {"web_search_enabled": True}
     agent = create_rag_agent(
-        llm=llm,
+        llm=get_llm(),
         vectorstore=vectorstore,
-        checkpointer=checkpointer
+        checkpointer=InMemorySaver(),
+        runtime_options=runtime_options,
     )
+    config = {"configurable": {"thread_id": "mini-rag-session"}}
 
-    config = {
-        "configurable": {
-            "thread_id":#当前对话的唯一编号
-                "mini-rag-session"
-        }
-    }
+    def clear_conversation():
+        config["configurable"]["thread_id"] = f"mini-rag-session-{uuid4().hex}"
 
     print("Agent ready.")
-    print("Type 'exit' to quit.")
+    print_help("Agentic RAG")
 
     while True:
         query = input("\nYou: ").strip()
-        if query.lower() == "exit":
+        if is_exit_command(query):
             break
         if not query:
             continue
+        if handle_command(
+            query,
+            vectorstore,
+            clear_conversation,
+            "Agentic RAG",
+            runtime_options,
+        ):
+            continue
+        stream_agent(agent=agent, query=query, config=config)
 
-        stream_agent(agent=agent,query=query,config=config)
 
 if __name__ == "__main__":
     main()

@@ -25,7 +25,7 @@ def get_sources(docs): #从检索得到的 Document 列表中，提取每个文�
         source = doc.metadata.get("source", "unknown source")
         page = doc.metadata.get("page")
 
-        if page is not None:
+        if isinstance(page, int):
             source_info = f"{source} - page {page + 1}"
         else:
             source_info = source
