@@ -1,4 +1,4 @@
-# Mini RAG
+# Agentic Mini RAG
 
 ## 中文简介
 
