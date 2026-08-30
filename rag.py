@@ -1,5 +1,17 @@
 from langchain_core.runnables import (RunnablePassthrough,RunnableParallel,RunnableLambda)
 
+
+def message_text(content):
+    """Return displayable text from string or structured LangChain message content."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        return "".join(
+            item.get("text", "") if isinstance(item, dict) else str(item)
+            for item in content
+        )
+    return ""
+
 def format_docs(docs):#提取出document中的文本内容
     return "\n\n".join(
         doc.page_content
@@ -10,7 +22,7 @@ def get_sources(docs): #从检索得到的 Document 列表中，提取每个文�
     sources = []
 
     for doc in docs:
-        source = doc.metadata.get("source")
+        source = doc.metadata.get("source", "unknown source")
         page = doc.metadata.get("page")
 
         if page is not None:
@@ -60,7 +72,7 @@ def conversational_rag_stream(query,chat_history,retriever,rewrite_prompt,answer
         "chat_history": chat_history,
         "question": query
     })
-    standalone_question = rewritten.content
+    standalone_question = message_text(rewritten.content).strip() or query
     docs = retriever.invoke(
         standalone_question
     )

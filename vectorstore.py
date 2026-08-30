@@ -11,12 +11,17 @@ def create_vectorstore(chunks, embeddings):
 
 def save_vectorstore(vectorstore):
     vectorstore.save_local(
-        VECTORSTORE_PATH
+        str(VECTORSTORE_PATH)
     )
 
 def load_vectorstore(embeddings):
+    index_file = VECTORSTORE_PATH / "index.faiss"
+    if not index_file.exists():
+        raise FileNotFoundError(
+            f"Vector store not found at {VECTORSTORE_PATH}. Run build_index.py first."
+        )
     vectorstore = FAISS.load_local(
-        VECTORSTORE_PATH,
+        str(VECTORSTORE_PATH),
         embeddings,
         allow_dangerous_deserialization=True
     )

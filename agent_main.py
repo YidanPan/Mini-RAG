@@ -35,9 +35,11 @@ def main():
     print("Type 'exit' to quit.")
 
     while True:
-        query = input("\nYou: ")
+        query = input("\nYou: ").strip()
         if query.lower() == "exit":
             break
+        if not query:
+            continue
 
         stream_agent(agent=agent,query=query,config=config)
 

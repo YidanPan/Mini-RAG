@@ -3,7 +3,7 @@ from vectorstore import load_vectorstore
 from retriever import get_retriever
 from prompt import get_rewrite_prompt, get_answer_prompt
 from llm import get_llm
-from rag import conversational_rag_stream
+from rag import conversational_rag_stream, message_text
 from memory import ConversationMemory
 
 
@@ -31,10 +31,12 @@ def main():
     memory = ConversationMemory()
 
     while True:#一直循环实现多轮对话
-        query = input("\nQuestion: ")
+        query = input("\nQuestion: ").strip()
 
         if query.lower() == "exit":
             break
+        if not query:
+            continue
 
         results = conversational_rag_stream(
             query=query,
@@ -50,7 +52,7 @@ def main():
         print("\nAnswer:")
         full_answer=""
         for chunk in results["stream"]:
-            content=chunk.content
+            content=message_text(chunk.content)
             print(
                 content,
                 end="",

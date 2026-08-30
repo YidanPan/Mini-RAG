@@ -7,12 +7,13 @@ def format_documents(docs): #把document中的内容格式统一
     parts = []
 
     for doc in docs:
-        source = doc.metadata.get(
+        metadata = getattr(doc, "metadata", {})
+        source = metadata.get(
             "source",
             "unknown"
         )
-        page = doc.metadata.get("page")
-        if page is not None:
+        page = metadata.get("page")
+        if isinstance(page, int):
             source_info = (
                 f"{source}, page {page + 1}"
             )
@@ -26,7 +27,6 @@ def format_documents(docs): #把document中的内容格式统一
 
 
 def create_tools(vectorstore):
-    source = Path(source).name
 
     @tool
     def search_knowledge_base(query: str) -> str:
@@ -69,6 +69,7 @@ def create_tools(vectorstore):
         name, such as 'rag.pdf' or
         'transformer.pdf'.
         """
+        source = Path(source).name
         writer=get_stream_writer()
         writer("Searching local knowledge base...")
 
@@ -124,12 +125,10 @@ def create_tools(vectorstore):
         """
 
         sources = set()
-        for doc in (
-            vectorstore.docstore._dict.values()
-        ):
+        for doc in (vectorstore.docstore._dict.values()):
             source = doc.metadata.get("source")
             if source:
-                sources.add(source)
+                sources.add(Path(source).name)
         return "\n".join(
             sorted(sources)
         )
