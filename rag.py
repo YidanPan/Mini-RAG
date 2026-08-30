@@ -51,7 +51,7 @@ def create_rag_chain(retriever, prompt, llm):
     )
     return chain
 
-def conversational_rag(query,chat_history,retriever,rewrite_prompt,answer_prompt,llm):
+def conversational_rag_stream(query,chat_history,retriever,rewrite_prompt,answer_prompt,llm):
     rewrite_chain = (
         rewrite_prompt
         | llm

@@ -3,7 +3,7 @@ from vectorstore import load_vectorstore
 from retriever import get_retriever
 from prompt import get_rewrite_prompt, get_answer_prompt
 from llm import get_llm
-from rag import conversational_rag
+from rag import conversational_rag_stream
 from memory import ConversationMemory
 
 
@@ -36,7 +36,7 @@ def main():
         if query.lower() == "exit":
             break
 
-        results = conversational_rag(
+        results = conversational_rag_stream(
             query=query,
             chat_history=memory.get_history(),
             retriever=retriever,
