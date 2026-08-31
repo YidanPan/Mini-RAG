@@ -1,9 +1,7 @@
 """Terminal entry point for Agentic RAG."""
-
 from uuid import uuid4
 
 from langgraph.checkpoint.memory import InMemorySaver
-
 from agent import create_rag_agent
 from agent_stream import stream_agent
 from cli_commands import handle_command, is_exit_command, print_help

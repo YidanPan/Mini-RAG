@@ -72,31 +72,6 @@ TAVILY_API_KEY=你的_Tavily_API_Key
 常用终端指令：`/help`、`/status`、`/config`、`/docs`、`/clear`、`/exit`。
 对话式 RAG 额外支持 `/source <文件名>` 和 `/source all`；Agentic RAG 支持 `/web on` 与 `/web off`。
 
-## 部署说明
-
-### 本地部署（当前已完成）
-
-本项目目前的默认运行方式就是本地部署：网页、FAISS 向量库、Ollama 模型均在你的电脑运行。按上面的“启动网页界面”执行即可，适合学习、演示和个人使用。
-
-### 公开链接部署（后续可做）
-
-GitHub 用于保存代码，不能直接运行本项目的 Streamlit 与 Python 服务。若要让其他人通过链接使用，推荐流程是：
-
-```text
-本地项目 → GitHub 仓库 → Streamlit Community Cloud（网页）→ 云端大模型 API
-```
-
-注意：当前项目使用本地 Ollama `qwen2.5:3b`，云端无法访问你电脑的 Ollama 服务。因此公开部署前需要把模型层改成云端 API（如 DeepSeek、OpenAI 或通义），并在部署平台的 Secrets 中配置 API Key 与 `TAVILY_API_KEY`。不要提交 `.env`、`.venv/` 或任何真实密钥。
-
-发布前的基本步骤：
-
-1. 将项目推送到 GitHub，保留 `requirements.txt`、`app.py`、`data/` 与必要的向量库文件。
-2. 在 [Streamlit Community Cloud](https://share.streamlit.io/) 连接 GitHub，选择仓库的 `main` 分支和入口文件 `app.py`。
-3. 在部署页面的 Secrets 中填写模型 API Key 与 Tavily Key。
-4. 完成部署后获得 `https://<应用名>.streamlit.app` 的公开链接。
-
-在模型层完成云端 API 适配之前，项目仅支持本机 `localhost` 访问。
-
 ---
 
 ## English overview

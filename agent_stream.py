@@ -2,7 +2,6 @@
 
 from langchain_core.messages import AIMessage, AIMessageChunk, ToolMessage
 
-
 def parse_tool_error(content):
     """Parse the structured error protocol returned by project tools."""
     if not isinstance(content, str) or not content.startswith("ERROR_TYPE:"):
@@ -11,7 +10,7 @@ def parse_tool_error(content):
     error = {}
     for line in content.splitlines():
         if ":" in line:
-            key, value = line.split(":", 1)
+            key, value = line.split(":", 1)#只切分一次
             error[key.strip()] = value.strip()
     return error
 
@@ -79,7 +78,7 @@ def stream_agent(agent, query, config):
         elif event["type"] == "answer_token":
             if not final_answer_started:
                 print("\n[Agent Answer]")
-                final_answer_started = True
+                final_answer_started = True #标题输出标志位
             print(event["text"], end="", flush=True)
         elif event["type"] == "progress":
             print(f"\n[Progress] {event['message']}")
